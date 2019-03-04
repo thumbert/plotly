@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.9.1 (released 2019-03-02)
+ - Updated to plotly version 1.45.0
+
 ## 0.9.0 (released 2018-10-22)
  - Added Dart 2 support
  - Updated to plotly version 1.41.3
