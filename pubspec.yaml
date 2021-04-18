@@ -1,5 +1,5 @@
 name: plotly
-version: 0.9.2
+version: 1.0.0
 author: Richard Lincoln <r.w.lincoln@gmail.com>
 description: Interactive, browser-based charting library
 homepage: https://github.com/rwl/plotly
