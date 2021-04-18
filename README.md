@@ -21,3 +21,10 @@ var layout = {
 
 Plot.id('myDiv', [trace], layout);
 ```
+
+### Update
+
+To update the plotly distribution go to https://github.com/plotly/plotly.js/tags 
+download the latest tag, extract the archive and then pick from the 
+`dist` folder the `plotly.min.js` file and put it into the `/lib` folder.
+
