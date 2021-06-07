@@ -6,7 +6,7 @@ import 'dart:async';
 
 /// Interactive scientific chart.
 class Plot {
-  final JsObject _Plotly;
+  final JsObject? _Plotly;
   final Element _container;
   final JsObject _proxy;
 
@@ -16,28 +16,28 @@ class Plot {
   /// give the `div` a height and width in CSS.
   Plot(Element container, List data, Map<String, dynamic> layout,
       {bool showLink: false,
-      bool staticPlot,
-      String linkText,
+      bool? staticPlot,
+      String? linkText,
       bool displaylogo: false,
-      bool displayModeBar,
-      bool scrollZoom})
+      bool? displayModeBar,
+      bool? scrollZoom})
       : _Plotly = context['Plotly'],
         _container = container,
-        _proxy = new JsObject.fromBrowserObject(container) {
+        _proxy = JsObject.fromBrowserObject(container) {
     if (_Plotly == null) {
-      throw new StateError('plotly.min.js not loaded');
+      throw StateError('plotly.min.js not loaded');
     }
-    var _data = new JsObject.jsify(data);
-    var _layout = new JsObject.jsify(layout);
+    var _data = JsObject.jsify(data);
+    var _layout = JsObject.jsify(layout);
     var opts = {};
-    if (showLink != null) opts['showLink'] = showLink;
+    opts['showLink'] = showLink;
     if (staticPlot != null) opts['staticPlot'] = staticPlot;
     if (linkText != null) opts['linkText'] = linkText;
-    if (displaylogo != null) opts['displaylogo'] = displaylogo;
+    opts['displaylogo'] = displaylogo;
     if (displayModeBar != null) opts['displayModeBar'] = displayModeBar;
     if (scrollZoom != null) opts['scrollZoom'] = scrollZoom;
-    var _opts = new JsObject.jsify(opts);
-    _Plotly.callMethod('newPlot', [_container, _data, _layout, _opts]);
+    var _opts = JsObject.jsify(opts);
+    _Plotly!.callMethod('newPlot', [_container, _data, _layout, _opts]);
   }
 
   /// Creates a new plot in an empty `<div>` element with the given id.
@@ -46,12 +46,12 @@ class Plot {
   /// give the `div` a height and width in CSS.
   factory Plot.id(String id, List data, Map<String, dynamic> layout,
       {bool showLink: false,
-      bool staticPlot,
-      String linkText,
+      bool? staticPlot,
+      String? linkText,
       bool displaylogo: false,
-      bool displayModeBar,
-      bool scrollZoom}) {
-    var elem = document.getElementById(id);
+      bool? displayModeBar,
+      bool? scrollZoom}) {
+    var elem = document.getElementById(id)!;
     return new Plot(elem, data, layout,
         showLink: showLink,
         staticPlot: staticPlot,
@@ -68,12 +68,12 @@ class Plot {
   factory Plot.selector(
       String selectors, List data, Map<String, dynamic> layout,
       {bool showLink: false,
-      bool staticPlot,
-      String linkText,
+      bool? staticPlot,
+      String? linkText,
       bool displaylogo: false,
-      bool displayModeBar,
-      bool scrollZoom}) {
-    var elem = document.querySelector(selectors);
+      bool? displayModeBar,
+      bool? scrollZoom}) {
+    var elem = document.querySelector(selectors)!;
     return new Plot(elem, data, layout,
         showLink: showLink,
         staticPlot: staticPlot,
@@ -92,7 +92,7 @@ class Plot {
   Stream get onUnhover => on("plotly_unhover");
 
   Stream on(String eventType) {
-    var ctrl = new StreamController();
+    var ctrl = StreamController();
     _proxy.callMethod('on', [eventType, ctrl.add]);
     return ctrl.stream;
   }
@@ -103,21 +103,21 @@ class Plot {
   /// the traces that are effected are given as a list of traces indices.
   /// Note, leaving the trace indices unspecified assumes that you want
   /// to restyle *all* the traces.
-  void restyle(Map aobj, [List<int> traces]) {
-    var args = [_container, new JsObject.jsify(aobj)];
+  void restyle(Map aobj, [List<int>? traces]) {
+    var args = [_container, JsObject.jsify(aobj)];
     if (traces != null) {
-      args.add(new JsObject.jsify(traces));
+      args.add(JsObject.jsify(traces));
     }
-    _Plotly.callMethod('restyle', args);
+    _Plotly!.callMethod('restyle', args);
   }
 
   /// An efficient means of updating just the layout of a plot.
   void relayout(Map aobj) {
-    _Plotly.callMethod('relayout', [_container, new JsObject.jsify(aobj)]);
+    _Plotly!.callMethod('relayout', [_container, JsObject.jsify(aobj)]);
   }
 
   /// Adds a new trace to an existing plot at any location in its data array.
-  void addTrace(Map trace, [int newIndex]) {
+  void addTrace(Map trace, [int? newIndex]) {
     if (newIndex != null) {
       addTraces([trace], [newIndex]);
     } else {
@@ -126,12 +126,12 @@ class Plot {
   }
 
   /// Adds new traces to an existing plot at any location in its data array.
-  void addTraces(List<Map> traces, [List<int> newIndices]) {
-    var args = [_container, new JsObject.jsify(traces)];
+  void addTraces(List<Map> traces, [List<int>? newIndices]) {
+    var args = [_container, JsObject.jsify(traces)];
     if (newIndices != null) {
-      args.add(new JsObject.jsify(newIndices));
+      args.add(JsObject.jsify(newIndices));
     }
-    _Plotly.callMethod('addTraces', args);
+    _Plotly!.callMethod('addTraces', args);
   }
 
   /// Removes a trace from a plot by specifying the index of the trace to be
@@ -141,18 +141,13 @@ class Plot {
   /// Removes traces from a plot by specifying the indices of the traces to be
   /// removed.
   void deleteTraces(List<int> indices) {
-    _Plotly.callMethod(
-        'deleteTraces', [_container, new JsObject.jsify(indices)]);
+    _Plotly!.callMethod('deleteTraces', [_container, JsObject.jsify(indices)]);
   }
 
   /// Extend traces
   void extendTraces(Map aobj, List<int> indices) {
-    var args = [
-      _container,
-      new JsObject.jsify(aobj),
-      new JsObject.jsify(indices)
-    ];
-    _Plotly.callMethod('extendTraces', args);
+    var args = [_container, JsObject.jsify(aobj), JsObject.jsify(indices)];
+    _Plotly!.callMethod('extendTraces', args);
   }
 
   /// Reposition a trace in the plot. This will change the ordering of the
@@ -163,10 +158,10 @@ class Plot {
   /// Reorder traces in the plot. This will change the ordering of the
   /// layering and the legend.
   void moveTraces(List<int> currentIndices, List<int> newIndices) {
-    _Plotly.callMethod('moveTraces', [
+    _Plotly!.callMethod('moveTraces', [
       _container,
-      new JsObject.jsify(currentIndices),
-      new JsObject.jsify(newIndices)
+      JsObject.jsify(currentIndices),
+      JsObject.jsify(newIndices)
     ]);
   }
 
@@ -185,13 +180,13 @@ class Plot {
   ///     frame is used as provided and does not use the `baseframe` property.
   ///   * [List<Map>], e.g. [{data: ...}, {data: ...}]: a list of frame objects,
   ///     each following the same rules as a single `object`.
-  void animate(frames, [Map opts]) {
+  void animate(frames, [Map? opts]) {
     final args = <dynamic>[_container];
     args.add((frames is Iterable || frames is Map)
-        ? new JsObject.jsify(frames)
+        ? JsObject.jsify(frames)
         : frames);
-    if (opts != null) args.add(new JsObject.jsify(opts));
-    _Plotly.callMethod('animate', args);
+    if (opts != null) args.add(JsObject.jsify(opts));
+    _Plotly!.callMethod('animate', args);
   }
 
   /// Registers new frames.
@@ -206,16 +201,15 @@ class Plot {
   /// [indices] is an list of integer indices matching the respective frames in [frameList]. If not
   /// provided, an index will be provided in serial order. If already used, the frame
   /// will be overwritten.
-  void addFrames(List<Map> frameList, [List indices]) {
-    var args = [_container, new JsObject.jsify(frameList)];
-    if (indices != null) args.add(new JsObject.jsify(indices));
-    _Plotly.callMethod('addFrames', args);
+  void addFrames(List<Map> frameList, [List? indices]) {
+    var args = [_container, JsObject.jsify(frameList)];
+    if (indices != null) args.add(JsObject.jsify(indices));
+    _Plotly!.callMethod('addFrames', args);
   }
 
   /// Deletes frames from plot by [indices].
   void deleteFrames(List<int> indices) {
-    _Plotly.callMethod(
-        'deleteFrames', [_container, new JsObject.jsify(indices)]);
+    _Plotly!.callMethod('deleteFrames', [_container, JsObject.jsify(indices)]);
   }
 
   /// Use redraw to trigger a complete recalculation and redraw of the graph.
@@ -223,20 +217,17 @@ class Plot {
   /// simplest way. You can make any arbitrary change to the data and layout
   /// objects, including completely replacing them, then call redraw.
   void redraw() {
-    _Plotly.callMethod('redraw', [_container]);
+    _Plotly!.callMethod('redraw', [_container]);
   }
 
   void purge() {
-    _Plotly.callMethod('purge', [_container]);
+    _Plotly!.callMethod('purge', [_container]);
   }
 
   /// A method for updating both the data and layout objects at once.
   void update(Map dataUpdate, Map layoutUpdate) {
-    _Plotly.callMethod('update', [
-      _container,
-      new JsObject.jsify(dataUpdate),
-      new JsObject.jsify(layoutUpdate)
-    ]);
+    _Plotly!.callMethod('update',
+        [_container, JsObject.jsify(dataUpdate), JsObject.jsify(layoutUpdate)]);
   }
 
   static getSchema() => context['Plotly']['PlotSchema'].callMethod("get");

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.0 (released 2021-06-07)
+ - Migrated to null safety 
+
 ## 0.9.2 (released 2021-04-17)
  - Update to plotly version 1.58.4
  - Last release before null safety
